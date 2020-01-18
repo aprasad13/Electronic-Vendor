@@ -1,0 +1,314 @@
+drop table shipment;
+drop table ShippingCompany;
+
+create table Item(
+itemid integer primary key autoincrement,
+name  text not null ,
+category text,
+brand text,
+colour text,
+unitprice real,
+manid integer,
+foreign key (manid) references Manufacturer
+);
+
+create table Store(
+storeid integer primary key autoincrement,
+AdressLine1 text,
+AddressLine2 text,
+city text,
+state text,
+zipcode integer);
+
+create table Warehouse(
+wid integer primary key autoincrement,
+AdressLine1 text,
+AddressLine2 text,
+city text,
+state text,
+zipcode integer);
+
+create table Shippingcompany(
+shid integer primary key autoincrement,
+AdressLine1 text,
+AddressLine2 text,
+city text,
+state text,
+zipcode integer,
+phoneno integer);
+
+create table Manufacturer(
+manid integer primary key autoincrement,
+name text,
+AdressLine1 text,
+AddressLine2 text,
+city text,
+state text,
+zipcode integer);
+
+create table customer(
+cid integer primary key autoincrement,
+name text,
+AdressLine1 text,
+AddressLine2 text,
+city text,
+state text,
+zipcode integer,
+phoneno integer,
+emailid text not null,
+password text not null);
+
+create table ordertable(
+orid integer primary key autoincrement,
+datetime text,
+totalcost real,
+type text,
+AdressLine1 text,
+AddressLine2 text,
+city text,
+state text,
+zipcode integer,
+paymenttype text,
+cardno integer,
+foreign key(cardno) references cardcredit);
+
+create table storeinventory(
+storeid integer,
+itemid integer,
+quantity real,
+primary key(storeid,itemid),
+foreign key(storeid) references store,
+foreign key(itemid) references item);
+
+
+create table warehouseinventory(
+wid integer,
+itemid integer,
+quantity real,
+primary key(wid,itemid),
+foreign key(wid) references warehouse,
+foreign key(itemid) references item);
+
+create table offlinetransaction(
+storeid integer,
+itemid integer,
+orid integer,
+quantity real,
+primary key(storeid,itemid,orid),
+foreign key(storeid) references store,
+foreign key(itemid) references item,
+foreign key (orid) references ordertable);
+
+create table onlinetransaction(
+wid integer,
+itemid integer,
+orid integer,
+quantity real,
+primary key(wid,itemid,orid),
+foreign key(wid) references warehouse,
+foreign key(itemid) references item,
+foreign key (orid) references ordertable);
+
+create table Storetransaction(
+storeid integer,
+itemid integer,
+wid integer,
+datetime text,
+quantity real,
+primary key(storeid,itemid,wid,datetime),
+foreign key(storeid) references store,
+foreign key(itemid) references item,
+foreign key (wid) references warehouse);
+
+create table Maunfacturetransaction(
+manid integer,
+itemid integer,
+wid integer,
+datetime text,
+quantity real,
+primary key(manid,itemid,wid,datetime),
+foreign key(manid) references Manufacturer,
+foreign key(itemid) references item,
+foreign key (wid) references warehouse);
+
+create table shipment(
+cid integer,
+shid integer,
+orid integer,
+primary key(cid,shid,orid),
+foreign key(cid) references customer,
+foreign key(orid) references ordertable,
+foreign key(shid) references Shippingcompany);
+
+create table cardcredit(
+cardno integer primary key,
+credit real
+);
+ 
+insert into Item (name,category,brand,colour,unitprice,manid) values('samsung galaxy s10','mobile phone','samsung','red',500.0,1);
+insert into Item (name,category,brand,colour,unitprice,manid) values('iphone XS','mobile phone','apple','white',700.0,4);
+insert into Item (name,category,brand,colour,unitprice,manid) values('LG home tv','home appliances','LG','black',450.0,2);
+insert into Item (name,category,brand,colour,unitprice,manid)  values('Philips hair dryer','other electronics','Philips','white',80.0,3);
+insert into Item (name,category,brand,colour,unitprice,manid)  values('samsung galaxy s8','mobile phone','samsung','white',350.0,1);
+
+insert into store (AdressLine1,AddressLine2,city,State,zipcode) values('2851 South King Drive','','Chicago','Illinois',60616);
+insert into store (AdressLine1,AddressLine2,city,State,zipcode) values('1756 Downtown Avenue','','Chicago','Illinois',60623);
+insert into store (AdressLine1,AddressLine2,city,State,zipcode) values('123 Rosemount Lane','MLK Avenue','Chicago','Illinois',60615);
+insert into store (AdressLine1,AddressLine2,city,State,zipcode) values('David lane','','Los Angeles','California',45231);
+insert into store (AdressLine1,AddressLine2,city,State,zipcode) values('Stuart lane','','Los Angeles','California',45235);
+
+insert into Warehouse (AdressLine1,AddressLine2,city,State,zipcode) values('2851 South King Drive','','Chicago','Illinois',60616);
+insert into Warehouse (AdressLine1,AddressLine2,city,State,zipcode) values('1756 Downtown Avenue','','Chicago','Illinois',60623);
+insert into Warehouse (AdressLine1,AddressLine2,city,State,zipcode) values('123 Rosemount Lane','MLK Avenue','Chicago','Illinois',60615);
+insert into Warehouse (AdressLine1,AddressLine2,city,State,zipcode) values('David lane','','Los Angeles','California',45231);
+insert into Warehouse (AdressLine1,AddressLine2,city,State,zipcode) values('Stuart lane','','Los Angeles','California',45235);
+
+
+insert into Shippingcompany (AdressLine1,AddressLine2,city,State,zipcode,phoneno) values('2851 South King Drive','','Chicago','Illinois',60616,1526238);
+insert into Shippingcompany (AdressLine1,AddressLine2,city,State,zipcode,phoneno) values('1756 Downtown Avenue','','Chicago','Illinois',60623,26272829);
+insert into Shippingcompany (AdressLine1,AddressLine2,city,State,zipcode,phoneno) values('123 Rosemount Lane','MLK Avenue','Chicago','Illinois',60615,14252627);
+insert into Shippingcompany (AdressLine1,AddressLine2,city,State,zipcode,phoneno) values('David lane','','Los Angeles','California',45231,12572722);
+insert into Shippingcompany (AdressLine1,AddressLine2,city,State,zipcode,phoneno) values('Stuart lane','','Los Angeles','California',45235,162728292);
+
+insert into Manufacturer (name,AdressLine1,AddressLine2,city,State,zipcode) values('Samsung','2851 South King Drive','','Chicago','Illinois',60616);
+insert into Manufacturer (name,AdressLine1,AddressLine2,city,State,zipcode) values('LG','1756 Downtown Avenue','','Chicago','Illinois',60623);
+insert into Manufacturer (name,AdressLine1,AddressLine2,city,State,zipcode) values('Philips','123 Rosemount Lane','MLK Avenue','Chicago','Illinois',60615);
+insert into Manufacturer (name,AdressLine1,AddressLine2,city,State,zipcode) values('Apple','David lane','','Los Angeles','California',45231);
+insert into Manufacturer (name,AdressLine1,AddressLine2,city,State,zipcode) values('Motorola','Stuart lane','','Los Angeles','California',45235);
+
+insert into Customer (name,AdressLine1,AddressLine2,city,State,zipcode,phoneno,emailid,password) values('Sam','2851 South King Drive','','Chicago','Illinois',60616,3129767823,'sam123@gmail.com','kdhdjdkd');
+insert into Customer (name,AdressLine1,AddressLine2,city,State,zipcode,phoneno,emailid,password) values('Jhon','1756 Downtown Avenue','','Chicago','Illinois',60623,3124567832,'jhon123@gmail.com','djdjdkd');
+insert into Customer (name,AdressLine1,AddressLine2,city,State,zipcode,phoneno,emailid,password) values('Rob','123 Rosemount Lane','MLK Avenue','Chicago','Illinois',60615,125363389,'ROb123@gmail.com','dhdjdkd');
+insert into Customer (name,AdressLine1,AddressLine2,city,State,zipcode,phoneno,emailid,password) values('Baline','David lane','','Los Angeles','California',45231,2638382929,'roh@hdjd.com','eheheje');
+insert into Customer (name,AdressLine1,AddressLine2,city,State,zipcode,phoneno,emailid,password) values('Stuart','Stuart lane','','Los Angeles','California',45235,253637383,'rheje@hss.com','hdjdkd');
+
+insert into cardcredit values(4567,1500);
+insert into cardcredit values(2367,800);
+insert into cardcredit values(1948,900);
+insert into cardcredit values(2567,1200);
+
+insert into ordertable (datetime ,totalcost,type ,AdressLine1 ,AddressLine2 ,city ,state ,zipcode ,paymenttype ,cardno ) values('2019-06-05 07:20:34',1280,'store','2851 South King Drive','','Chicago','Illinois',60616,'card',4567);
+insert into ordertable (orid,datetime ,totalcost,type ,AdressLine1 ,AddressLine2 ,city ,state ,zipcode ,paymenttype ,cardno ) values(2,'2019-06-08 14:30:54',430,'online','1756 Downtown Avenue','','Chicago','Illinois',60623,'credit',null);
+
+insert into storeinventory values(1,1,50);
+insert into storeinventory values(1,2,80);
+insert into storeinventory values(1,3,100);
+insert into storeinventory values(1,4,70);
+insert into storeinventory values(1,5,300);
+insert into storeinventory values(2,1,50);
+insert into storeinventory values(2,2,80);
+insert into storeinventory values(2,3,100);
+insert into storeinventory values(2,4,70);
+insert into storeinventory values(2,5,300);
+insert into storeinventory values(3,1,50);
+insert into storeinventory values(3,2,80);
+insert into storeinventory values(3,3,100);
+insert into storeinventory values(3,4,70);
+insert into storeinventory values(3,5,300);
+insert into storeinventory values(4,1,50);
+insert into storeinventory values(4,2,80);
+insert into storeinventory values(4,3,100);
+insert into storeinventory values(4,4,70);
+insert into storeinventory values(4,5,300);
+insert into storeinventory values(5,1,50);
+insert into storeinventory values(5,2,80);
+insert into storeinventory values(5,3,100);
+insert into storeinventory values(5,4,70);
+insert into storeinventory values(5,5,300);
+
+insert into warehouseinventory values(1,1,500);
+insert into warehouseinventory values(1,2,800);
+insert into warehouseinventory values(1,3,1000);
+insert into warehouseinventory values(1,4,700);
+insert into warehouseinventory values(1,5,800);
+insert into warehouseinventory values(2,1,500);
+insert into warehouseinventory values(2,2,800);
+insert into warehouseinventory values(2,3,1000);
+insert into warehouseinventory values(2,4,700);
+insert into warehouseinventory values(2,5,800);
+insert into warehouseinventory values(3,1,500);
+insert into warehouseinventory values(3,2,800);
+insert into warehouseinventory values(3,3,1000);
+insert into warehouseinventory values(3,4,700);
+insert into warehouseinventory values(3,5,800);
+insert into warehouseinventory values(4,1,500);
+insert into warehouseinventory values(4,2,800);
+insert into warehouseinventory values(4,3,1000);
+insert into warehouseinventory values(4,4,700);
+insert into warehouseinventory values(4,5,800);
+insert into warehouseinventory values(5,1,500);
+insert into warehouseinventory values(5,2,800);
+insert into warehouseinventory values(5,3,1000);
+insert into warehouseinventory values(5,4,700);
+insert into warehouseinventory values(5,5,800);
+
+insert into offlinetransaction values(1,1,1,1);
+insert into offlinetransaction values(1,2,1,1);
+insert into offlinetransaction values(1,4,1,1);
+
+insert into onlinetransaction values(1,4,2,1);
+insert into onlinetransaction values(1,5,2,1);
+
+insert into Storetransaction values(1,2,1,'2019-03-01 17:20:34',50);
+insert into Storetransaction values(2,4,3,'2019-05-21 17:20:34',50);
+
+
+insert into Maunfacturetransaction values(1,2,1,'2019-01-07 17:20:34',500);
+insert into Maunfacturetransaction values(2,4,3,'2019-05-25 14:20:34',500);
+
+insert into shipment values(4,1,1);
+insert into shipment values(2,3,1);
+drop trigger winventupdate;
+create trigger sinventupdate
+ after update on storeinventory
+ for each row
+ when new.quantity < 50
+ begin
+ update storeinventory set quantity = (new.quantity + 100) where (storeid = old.storeid and itemid = old.itemid);
+ update warehouseinventory set quantity = (warehouseinventory.quantity - 100) where (wid = old.storeid and itemid = old.itemid);
+ insert into storetransaction values(old.storeid,old.itemid,old.storeid,datetime('now'),100);
+ end;
+ 
+update storeinventory set quantity = 20 where storeid = 1 and itemid =1 ;
+
+create trigger winventupdate
+ after update on warehouseinventory
+ for each row
+ when new.quantity < 500
+ begin
+ update warehouseinventory set quantity = (new.quantity + 500) where (wid = old.wid and itemid = old.itemid);
+ insert into Maunfacturetransaction values((select manid from Manufacturer where manid=(select distinct manid from Item where itemid=old.itemid)),old.itemid,old.wid,datetime('now'),500);
+ end;
+
+create trigger oftrans
+ after insert on offlinetransaction
+ begin
+ update storeinventory set quantity = storeinventory.quantity -new.quantity where (storeinventory.itemid = new.itemid and storeinventory.storeid = new.storeid);
+ end;
+ drop trigger ontrans;
+create trigger ontrans
+ after insert on onlinetransaction
+ begin
+ update warehouseinventory set quantity = warehouseinventory.quantity -new.quantity where (warehouseinventory.itemid = new.itemid and warehouseinventory.wid = 1);
+ end;
+ 
+
+ create trigger setnull
+ after insert on ordertable
+ when new.cardno = ''
+ begin
+ update ordertable set cardno= null;
+ end;
+
+ALTER TABLE customer 
+ADD COLUMN accno;
+
+update customer
+set accno = 1262745456 where cid =1
+
+insert into warehouseinventory values(5,6,750);
+insert into warehouseinventory  values(5,7,650);
+insert into warehouseinventory values(5,8,550);
+insert into warehouseinventory  values(5,9,450);
+
+Select  distinct name,quantity,ordertable.orid,ordertable.datetime,totalcost,type ,AdressLine1 ,AddressLine2 ,city ,state ,zipcode ,paymenttype ,cardno  from shipment inner join ordertable on shipment.orid=ordertable.orid  inner join onlinetransaction on ordertable.orid=onlinetransaction.orid inner join Item on Item.itemid = onlinetransaction.itemid where cid = 1;
