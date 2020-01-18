@@ -1,4 +1,4 @@
-                                                  Electronic Vendor Database
+                                             Electronic Vendor Database
 
 Overview
 
